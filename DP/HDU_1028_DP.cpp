@@ -1,6 +1,6 @@
 /**==================================
  | Author: YunHao
- | OJ: POJ 1125
+ | OJ: HDU 1028
  | Kind: DP
  | Date: 2016/8/1
  | Describe:
