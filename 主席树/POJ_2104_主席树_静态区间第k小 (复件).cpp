@@ -13,7 +13,7 @@ int n, m;
 int a, b, c;
 
 int num[maxn], numcpy[maxn];// 存储原序列和sort、unique之后的序列
-unsigned short sum[maxn*32], lc[maxn*32], rc[maxn*32];//存储名次在l和r之间的数的个数、节点左孩子、节点右孩子
+int sum[maxn<<5], lc[maxn<<5], rc[maxn<<5];//存储名次在l和r之间的数的个数、节点左孩子、节点右孩子
 int tr[maxn], tot, trcnt;//存储第i次操作时，新的线段树的根；tot是总节点数，trcnt是线段树的棵树
 
 void init(){
@@ -29,12 +29,11 @@ void maintain(int o, int l, int r){
 }
 
 int build(int o, int l, int r){
-    tot++;
     int mid = (l+r)>>1;
     if(l == r) sum[o] = 0;
     else{
-		lc[o] = build(tot, l, mid);
-		rc[o] = build(tot, mid+1, r);
+		lc[o] = build(tot++, l, mid);
+		rc[o] = build(tot++, mid+1, r);
         maintain(o, l, r);
     }
 	return o;
@@ -42,17 +41,16 @@ int build(int o, int l, int r){
 
 int y1, y2, p, q;
 int update(int o, int l, int r, int ltree){//新增变量是ltree即上一棵树的对应的区间节点
-    tot++;
     int mid = (l+r)>>1;
     if(l == r) sum[o]++;
     else{
         if(p <= mid){
-			lc[o] = update(tot, l, mid, lc[ltree]);
+			lc[o] = update(tot++, l, mid, lc[ltree]);
             rc[o] = rc[ltree];
         }
         else {
             lc[o] = lc[ltree];
-            rc[o] = update(tot, mid+1, r, rc[ltree]);
+            rc[o] = update(tot++, mid+1, r, rc[ltree]);
         }
         maintain(o, l, r);
     }
@@ -71,10 +69,7 @@ int query(int o, int l, int r, int ltree, int rk){
 
 int main()
 {
-    int t;
-    scanf("%d", &t);
-    while(t--){
-        scanf("%d%d", &n, &m);
+    while(~scanf("%d%d", &n, &m)){
 		init();
 		for (int i = 0; i < n; i++)
 			scanf("%d", &num[i]);
@@ -82,19 +77,12 @@ int main()
 		memcpy(numcpy, num, sizeof(num));//考贝
 		sort(numcpy, numcpy + n);
 		int len = unique(numcpy, numcpy + n) - numcpy;//去重后的数列的长度
-		tr[trcnt] = build(tot++, 1, len);//新建线段树
-		trcnt++;
+		tr[trcnt++] = build(tot++, 1, len);//新建线段树
 		
 		for (int i = 0; i < n; i++){
 			p = lower_bound(numcpy, numcpy+len, num[i]) - numcpy;//找到第i个数在正常排列之后的出现的位置
 			p++;
-			tr[trcnt] = update(tot, 1, len, tr[trcnt - 1]);//每次更新都新建一颗线段树
-			trcnt++;
-			if(tot >= 3200000)
-            {
-                while(1)
-                    int fuck = 3;
-                }
+			tr[trcnt++] = update(tot++, 1, len, tr[trcnt - 1]);//每次更新都新建一颗线段树
 		}
 		for (int i = 0; i < m; i++){
 			scanf("%d%d%d", &a, &b, &c);
