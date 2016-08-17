@@ -13,14 +13,14 @@ int n, m;
 int a, b, c;
 
 int num[maxn], numcpy[maxn];// 存储原序列和sort、unique之后的序列
-unsigned short sum[maxn*32], lc[maxn*32], rc[maxn*32];//存储名次在l和r之间的数的个数、节点左孩子、节点右孩子
+int sum[maxn<<5], lc[maxn<<5], rc[maxn<<5];//存储名次在l和r之间的数的个数、节点左孩子、节点右孩子
 int tr[maxn], tot, trcnt;//存储第i次操作时，新的线段树的根；tot是总节点数，trcnt是线段树的棵树
 
 void init(){
     tot = 0;
     trcnt = 0;
-    memset(lc, -1, sizeof lc);
-    memset(rc, -1, sizeof rc);
+    //memset(lc, -1, sizeof lc);不能乱memset，否则容易MLE
+    //memset(rc, -1, sizeof rc);
 }
 
 void maintain(int o, int l, int r){
@@ -71,10 +71,7 @@ int query(int o, int l, int r, int ltree, int rk){
 
 int main()
 {
-    int t;
-    scanf("%d", &t);
-    while(t--){
-        scanf("%d%d", &n, &m);
+    while(~scanf("%d%d", &n, &m)){
 		init();
 		for (int i = 0; i < n; i++)
 			scanf("%d", &num[i]);
@@ -82,7 +79,7 @@ int main()
 		memcpy(numcpy, num, sizeof(num));//考贝
 		sort(numcpy, numcpy + n);
 		int len = unique(numcpy, numcpy + n) - numcpy;//去重后的数列的长度
-		tr[trcnt] = build(tot++, 1, len);//新建线段树
+		tr[trcnt] = build(tot, 1, len);//新建线段树
 		trcnt++;
 		
 		for (int i = 0; i < n; i++){
@@ -90,11 +87,6 @@ int main()
 			p++;
 			tr[trcnt] = update(tot, 1, len, tr[trcnt - 1]);//每次更新都新建一颗线段树
 			trcnt++;
-			if(tot >= 3200000)
-            {
-                while(1)
-                    int fuck = 3;
-                }
 		}
 		for (int i = 0; i < m; i++){
 			scanf("%d%d%d", &a, &b, &c);
