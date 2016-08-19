@@ -63,7 +63,7 @@ int query(int o, int l, int r, int ltree, int rk){
     int mid = (l+r)>>1;
     if(l == r) return l;//返回在排好后（numcpy）中序列的位置
     else{
-		int tmp = sum[lc[o]] - sum[lc[ltree]];//插入 第i个到第j个之间的数 时对应数 的名次在 l和r之间的数的个数
+		int tmp = sum[lc[o]] - sum[lc[ltree]];//插入 第i个到第j个之间的数 时对应数 的名次在 l和mid之间的数的个数
         if(tmp >= rk) return query(lc[o], l, mid, lc[ltree], rk);//如果tmp大于k，在左子找。
         else return query(rc[o], mid+1, r, rc[ltree], rk-tmp);//如果小于k，则在右子找第rk-tmp的数
     }
